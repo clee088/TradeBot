@@ -218,7 +218,7 @@ class TradeBot:
         {Fore.LIGHTYELLOW_EX}Account #: {info['account_number']} <-- {Fore.LIGHTGREEN_EX if info['status'] == "ACTIVE" else Fore.LIGHTRED_EX}{info['status']}
         {Fore.LIGHTYELLOW_EX}Equity: ${info['equity']}
         {Fore.LIGHTYELLOW_EX}Buying Power: ${info['buying_power']}
-        {Fore.LIGHTYELLOW_EX}Today'vs P/L: ${Fore.LIGHTGREEN_EX if pl > 0 else Fore.LIGHTRED_EX}{pl} ({plPercent}%)
+        {Fore.LIGHTYELLOW_EX}Today's P/L: {Fore.LIGHTRED_EX if pl < 0 else Fore.LIGHTGREEN_EX}${pl} ({plPercent}%)
         {Fore.LIGHTYELLOW_EX}PDT: {Fore.LIGHTGREEN_EX if pdt == False else Fore.LIGHTRED_EX} {pdt}
         """
         print(inspect.cleandoc(text))
