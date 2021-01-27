@@ -12,16 +12,18 @@ helpText = '''
         ----------------------------------------
         /                Alpaca                /
         ----------------------------------------
-        TRADE STREAM ----> (Re)connects to trade stream.
+        ACCOUNT ---------> Returns account info.
         ORDERS ----------> Returns any open Alpaca orders.
-        CREATE ORDER ----> Creates market order for TradeBot's symbol.
+        CREATE ORDER ----> Creates market order (qty=1) for TradeBot's symbol.
         CANCEL ALL ------> Cancels all open Alpaca orders.
         POSITIONS -------> Returns current Alpaca positions.
         CLOSE POSITION --> Closes position for any given symbol if owned.
+        CONN STREAMS ----> (Re)connects to trade/data stream.
         ----------------------------------------
         /                 SQL                  /
         ----------------------------------------
         LIST DATABASES --> Lists all SQL database table names.
+        VIEW LAST DATA --> Returns last two data entries for TradeBot's symbol.
         COUNT DATABASE --> Returns number of rows in any given symbol's SQL database.
         CHECK TABLE -----> Checks SQL database if a table with any given symbol exists.
         DROP TABLE ------> Drops any given symbol's SQL database.

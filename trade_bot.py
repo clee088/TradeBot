@@ -81,8 +81,10 @@ class TradeBot:
         self.startTime = dt.datetime.now().astimezone(ZoneInfo('US/Eastern'))
         print(f'{Fore.LIGHTYELLOW_EX}{Style.BRIGHT}Type "HELP" for a list of commands.')
         print(f"{Fore.LIGHTYELLOW_EX}Started TradeBot at {self.startTime.strftime('%H:%M:%S %Y-%m-%d')}\n")
+
         while self.isRunning:
 
+            # SYSTEM
             if self.userInput == "PREV" or self.userInput == "LAST":
                 self.userInput = self.previousUserInput
 
@@ -114,18 +116,26 @@ class TradeBot:
             if self.userInput == "UPTIME":
                 print(f"{Fore.LIGHTYELLOW_EX}Uptime: {self.getUptime()}")
 
-            if self.userInput == "TRADE STREAM":
+            # ALPACA
+            if self.userInput == "CONN STREAMS":
                 try:
                     self.streamTrades()
                 except Exception as error:
                     print(f"{Fore.LIGHTRED_EX}Connection is already open!")
+                try:
+                    self.streamData()
+                except Exception as error:
+                    print(f"{Fore.LIGHTRED_EX}Connection is already open!")
+
+            if self.userInput == "ACCOUNT":
+                self.getAccountInfo()
 
             if self.userInput == "ORDERS":
                 api.getOrders()
 
             if self.userInput == "CREATE ORDER":
-                # api.createMarketOrder(self.symbol, 1, "buy")
-                api.createTrailingStopOrder(symbol=self.symbol, qty=1)
+                api.createMarketOrder(self.symbol, 1, "buy")
+                # api.createTrailingStopOrder(symbol=self.symbol, qty=1)
 
             if self.userInput == "CANCEL ALL":
                 api.cancelAllOrders()
@@ -137,8 +147,13 @@ class TradeBot:
                 symbol = input("Symbol: ")
                 api.closePosition(symbol)
 
+            # SQL
             if self.userInput == "LIST DATABASES":
                 self.listDatabases()
+
+            if self.userInput == "VIEW LAST DATA":
+                print(f"{Fore.LIGHTYELLOW_EX}{self.symbol.upper()} last two hourly data entries.")
+                print(f"{Fore.LIGHTYELLOW_EX}{self.sqlHoursManager.getTwoLatestRows(self.symbol)}")
 
             if self.userInput == "COUNT DATABASE":
                 symbol = input("Symbol: ").upper()
@@ -156,6 +171,7 @@ class TradeBot:
                 except:
                     print(f"{Fore.LIGHTRED_EX}{symbol} does not exist!")
 
+            # DATA
             if self.userInput == "GET MARKET DATA":
                 symbol = input("Symbol: ").upper()
                 month = int(input("Month:   "))
@@ -177,6 +193,7 @@ class TradeBot:
                 self.dataManager.calculateHourlyIndicators()
                 self.tradeManager.analyzeIndicators()
 
+            # CHARTS
             if self.userInput == "PLOT HOUR":
                 self.plotManager.plotHourlyChart()
 
@@ -191,6 +208,20 @@ class TradeBot:
 
     def streamTrades(self):
         self.tradeStreamingManager.streamData()
+
+    def getAccountInfo(self):
+        info = api.getAccount()
+        pdt = info['pattern_day_trader']
+        pl = round(float(info['equity']) - float(info['last_equity']), 2)
+        plPercent = round(pl/float(info['last_equity']) * 100, 2)
+        text = f"""
+        {Fore.LIGHTYELLOW_EX}Account #: {info['account_number']} <-- {Fore.LIGHTGREEN_EX if info['status'] == "ACTIVE" else Fore.LIGHTRED_EX}{info['status']}
+        {Fore.LIGHTYELLOW_EX}Equity: ${info['equity']}
+        {Fore.LIGHTYELLOW_EX}Buying Power: ${info['buying_power']}
+        {Fore.LIGHTYELLOW_EX}Today's P/L: ${Fore.LIGHTGREEN_EX if pl > 0 else Fore.LIGHTRED_EX}{pl} ({plPercent}%)
+        {Fore.LIGHTYELLOW_EX}PDT: {Fore.LIGHTGREEN_EX if pdt == False else Fore.LIGHTRED_EX} {pdt}
+        """
+        print(inspect.cleandoc(text))
 
     def getPositions(self):
         cp = api.getPositions()
