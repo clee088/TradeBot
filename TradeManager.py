@@ -54,6 +54,9 @@ class TradeManager():
                     else:
                         print(f"{Fore.LIGHTRED_EX}Attempted order but buying power is too low: HMA")
 
+                else:
+                    print(f"{Fore.LIGHTRED_EX}No buy signals.")
+
         if 'qty' in currentPosition.keys() and int(currentPosition['qty']) > 0:
             if macdClose:
                 api.cancelAllOrders()
