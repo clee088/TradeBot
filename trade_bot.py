@@ -120,9 +120,6 @@ class TradeBot:
             if self.userInput == "CONN STREAMS":
                 try:
                     self.streamTrades()
-                except Exception as error:
-                    print(f"{Fore.LIGHTRED_EX}Connection is already open!")
-                try:
                     self.streamData()
                 except Exception as error:
                     print(f"{Fore.LIGHTRED_EX}Connection is already open!")
@@ -242,7 +239,7 @@ class TradeBot:
             minute = int(current.minute)
             second = int(current.second)
             if minute != 0 and minute % 30 == 0 and second % 60 == 0 and weekNumber <= 5 \
-                    and hour >= 9 and hour <= 16:
+                    and hour >= 9 and hour <= 15:
                 print(f"{Fore.LIGHTMAGENTA_EX}Analyzing Indicators...")
                 time.sleep(5)
                 self.tradeManager.analyzeIndicators()

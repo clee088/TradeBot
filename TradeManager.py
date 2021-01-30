@@ -30,7 +30,8 @@ class TradeManager():
         macdClose = macd[1] >= 0 and macd[0] < macd[1] and macd[0] < 0
         hmaClose = hmaSlow[0] < hmaSlow[1]
 
-        slopeCheck = slope[0] > -0.12
+        slopeCheck = slope[0] > -0.12 and slope[0] < 1
+
         # Check if holding current position
         if 'code' in currentPosition.keys() and int(currentPosition['code']) == 40410000 or int(currentPosition['qty']) <= 5:
             if lastPrice <= minutePrice * 1.0025 and lastPrice >= minutePrice * 0.9975:
